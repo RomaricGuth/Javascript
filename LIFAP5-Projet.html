@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title id="titre">Forum étudiant (LIFAP5-Projet 2018-2019)</title>
+
+  
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  <!-- icones -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+  <!-- css -->
+  <link rel="stylesheet" type="text/css" href="LIFAP5-Projet.css">
+  <!-- script de base pour le projet -->
+  <script src="./LIFAP5-Projet.js" type="text/javascript"></script> 
+</head>
+<body>
+  <nav class="navbar navbar-light bg-light">
+    <!-- <div class="container-fluid"> -->
+      <!-- <div class="navbar-header"> -->
+        <div class="navbar-brand">
+          <img id="brand-logo" alt="Brand" class="brand" src="./logo.svg">
+        </div>
+        <div class="navbar-text">
+          <a href="#" id="identification-link">S'identifier</a>
+        </div>
+        <div class="navbar-text">Forum ouvert de débat étudiant</div>
+        <form class="form-inline">
+          <input class="form-control" type="search" id="search-text" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success"  id="search-btn"   type="submit">Search</button>
+        </form>
+
+      <!-- </div> -->
+    <!-- </div> -->
+  </nav>
+
+  <!-- Modal ajout de sujet -->
+  <div id="modal-upload-topic" class="modal fade" role="dialog" style="display: none;">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+        <form class="modal-content" id="upload-form" enctype="multipart/form-data">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">×</button>
+            <h4 class="modal-title">Créer un nouveau sujet</h4>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="upload-title">Titre :</label>
+              <input class="form-control" id="upload-title" name="title" type="text">
+            </div>
+            <div class="form-group">
+              <label for="upload-description">Description :</label>
+              <input class="form-control" id="upload-description" name="description" type="text">
+            </div>
+            <div class="form-group">
+              <label for="upload-open">Ouvert/fermé :</label>
+              <input class="form-control" id="upload-open" name="open" type="text">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <input class="btn btn-primary" id="upload-btn" data-dismiss="modal" name="submit" value="Créer" type="button">
+          </div>
+        </form>
+    </div>
+  </div> 
+
+  <!-- main app -->
+  <div class="container-fluid">
+    <!-- first line : content-->
+    <div class="row">
+
+      <div class="col-4">
+        <!-- panel topics-->
+        <div id="panel-topics">
+
+          <div class="container" id="table-topics-head">
+            <div class="row text-white bg-dark">
+              <div class="col-5" id="triSujet"><a href="#">Sujet</a></div>
+              <div class="col-3" id="triMaj"><a href="#">MAJ</a></div>
+              <div class="col-1" id="triContribs"><a href="#">Posts</a></div>
+              <div class="col-3" id="triDate"><a href="#">Date</a></div>
+            </div>            
+          </div>
+          <div class="container" id="table-topics-body">
+
+          </div>
+         
+        </div> <!-- panel topics-->
+      </div><!-- column -->
+
+      <div class="col-8" id="topic">
+      
+      </div>
+    </div><!-- row -->
+    <div class="row align-items-center"> <!-- fixed-bottom -->
+      <div class="col-4">
+         <!-- Trigger the modal with a button -->
+         <button type="button" class="btn btn-info float-right" data-toggle="modal" data-target="#modal-upload-topic">Ajouter un sujet</button>
+      </div>
+      <div class="col-8">
+        <div class="container-fluid">
+          <form class="form-inline" id="contrib-add">
+            <div class="speech-bubble col-12">
+              <textarea class="form-control" rows="2" id="contrib-text" placeholder="Saisir ici votre contribution" style="min-width: 100%"> </textarea>
+            </div>
+              <button class="btn btn-secondary float-right"  id="contrib-btn"  type="submit">Ajouter</button>
+          </form>
+        </div>
+       </div>       
+    </div>
+  </div><!--container-fluid-->
+</body>
+</html>

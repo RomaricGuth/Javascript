@@ -1,0 +1,300 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="french" lang="french"><head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <meta name="generator" content="pandoc">
+  <title>LIFAP5 - Projet 2019P - Sujet</title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <meta name="keywords" content="LIFAP5, programmation fonctionnelle,Javascript"> <meta name="description" content="Projet de l'UE LIFAP5 - 2018-2019 - UCBL - FST - Informatique"> <meta charset="UTF-8"> <link rel="stylesheet" href="sujet_fichiers/Projet.css">
+</head>
+<body>
+<div id="TOC">
+<ul>
+<li><a href="#lifap5---projet-gestionnaire-de-débat---version-du-050419">LIFAP5 - Projet : gestionnaire de débat - <em>version du 05/04/19</em></a><ul>
+<li><a href="#versions-du-document">Versions du document</a></li>
+<li><a href="#maquette-de-lapplication">Maquette de l'application</a></li>
+<li><a href="#fonctionnalités-du-gestionnaire-de-débat">Fonctionnalités du gestionnaire de débat</a></li>
+<li><a href="#conseils-pour-le-développement-du-client">Conseils pour le développement du client</a></li>
+</ul></li>
+<li><a href="#étapes-du-projet-évaluation">Étapes du projet, évaluation</a><ul>
+<li><a href="#jalon-1-maquette-de-lapplication">Jalon 1 : maquette de l'application</a></li>
+<li><a href="#jalon-2-génération-dynamique-sans-serveur">Jalon 2 : génération dynamique sans serveur</a></li>
+<li><a href="#jalon-3-accès-au-serveur">Jalon 3 : accès au serveur</a></li>
+<li><a href="#modalité-dévaluation">Modalité d'évaluation</a><ul>
+<li><a href="#dépôt-du-code">Dépôt du code</a></li>
+<li><a href="#soutenance">Soutenance</a></li>
+<li><a href="#critères-dévaluation">Critères d'évaluation</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#description-technique">Description technique</a><ul>
+<li><a href="#schémas-json">Schémas <code>json</code></a><ul>
+<li><a href="#utilisateurs-users">Utilisateurs (<em>users</em>)</a></li>
+<li><a href="#sujet-topics-et-contributions-_posts">Sujet (<em>topics</em>) et contributions (_posts)</a></li>
+</ul></li>
+<li><a href="#accès-au-serveur">Accès au serveur</a><ul>
+<li><a href="#authentification-sur-le-serveur">Authentification sur le serveur</a></li>
+<li><a href="#api-rest">API rest</a><ul>
+<li><a href="#api-de-test">API de test</a></li>
+<li><a href="#api-user">API user</a></li>
+<li><a href="#api-topic">API topic</a></li>
+<li><a href="#api-posts">API posts</a></li>
+</ul></li>
+<li><a href="#code-derreurs">Code d'erreurs</a></li>
+</ul></li>
+<li><a href="#accès-au-serveur-depuis-lextérieur-du-campus">Accès au serveur depuis l'extérieur du campus</a></li>
+</ul></li>
+</ul>
+</div>
+<h1 id="lifap5---projet-gestionnaire-de-débat---version-du-050419">LIFAP5 - Projet : gestionnaire de débat - <em>version du 05/04/19</em></h1>
+<p>L'objectif de ce projet est de mettre en pratique ce qui a été vu 
+dans l'UE LIFAP5 à travers la réalisation de la partie client, 
+entièrement en javascript dans le navigateur, d'une application 
+minimaliste de gestion de débats. Le projet est à réaliser en binôme <strong>constitué au sein du même groupe de TD</strong> (ou éventuellement en monôme).</p>
+<div class="warning">
+<p><strong>Attention:</strong> il est important de lire <strong>tout</strong> l'énoncé avant de commencer à coder. De plus, lire le projet en entier vous permettra de mieux comprendre où vous allez.</p>
+</div>
+<div class="warning">
+<p><strong>Attention:</strong> <a href="https://perso.liris.cnrs.fr/romuald.thion/files/Enseignement/LIFAP5/Projet-2019P/LIFAP5-2019P-Projet-Frontend.zip">Un projet de départ</a> vous est fourni.</p>
+</div>
+<div class="warning">
+<p><strong>Attention:</strong> Le serveur <code>https://lifap5.univ-lyon1.fr</code> est en ligne</p>
+</div>
+<h2 id="versions-du-document">Versions du document</h2>
+<ul>
+<li>17/03/19 : version initiale</li>
+<li>26/03/19 : ajout du projet de départ</li>
+<li>30/03/19 : màj spécifications + api serveur</li>
+<li>03/04/19 : serveur en production</li>
+<li>05/04/19 : maj barème</li>
+</ul>
+<h2 id="maquette-de-lapplication">Maquette de l'application</h2>
+<p>On souhaite réaliser un gestionnaire de débat, c'est-à-dire une forme de <em>forum</em>,
+ ici simplifié pour les besoins pédagogiques. Ci-après, une esquisse 
+générale de l'interface de l'application avec ses principales 
+fonctionnalités (<em>dont certaines optionnelles)</em>.</p>
+<div class="warning">
+<p><strong>Attention :</strong> il ne s'agit pas de reproduire l'image 
+au pixel près en HTML, bien au contraire : vous êtes libres de déplacer 
+le header, le footer, de ne pas utiliser d'icônes : ce que vous voulez, 
+tant que les fonctionnalités sont là.</p>
+</div>
+<div class="figure">
+<img src="sujet_fichiers/LIFAP5%2520Projet%25202018-2019.png" title="Esquisse de l'interface de l'application">
+
+</div>
+<p><a name="FEATURES"></a></p>
+<h2 id="fonctionnalités-du-gestionnaire-de-débat">Fonctionnalités du gestionnaire de débat</h2>
+<p>Le <em>forum</em> est une collection de sujets (appelés <em>topics</em> dans l'API) postés par ses utilisateurs (<em>users</em>). Chaque sujet a une description et une liste de contributions (<em>posts</em>) saisies par les utilisateurs. Voir <a href="#JSON">la description des fichiers <code>json</code></a> pour plus de détails. Les fonctionnalités attendues du <em>forum</em> sont les suivantes :</p>
+<p>Fonctionnalités obligatoires :</p>
+<ul>
+<li><em>S'identifier</em> en saisissant sa clef d'API (celle dans tomuss)</li>
+<li><em>Consulter</em> la liste de tous les sujets de débat</li>
+<li><em>Trier</em> la liste des sujets de débat par :
+<ul>
+<li>titre (croissant ou décroissant)</li>
+<li>date de création du sujet (croissant ou décroissant)</li>
+</ul></li>
+<li><em>Sélectionner</em> un débat pour en afficher le détail et sa liste des contributions</li>
+<li>Trier les contributions d'un débat par :
+<ul>
+<li>nombre de likes ou de dislikes (croissant ou décroissant)</li>
+<li>dates (croissante ou décroissante)</li>
+<li>ordre alphabétique des auteurs (croissant ou décroissant)</li>
+</ul></li>
+<li>(écriture) <em>Ajouter</em> un nouveau sujet de débat</li>
+<li>(écriture) <em>Liker</em> et <em>disliker</em> des contributions</li>
+</ul>
+<p>Fonctionnalités optionnelles (vous devez en réaliser <em>au moins une dans chaque bloc</em> pour avoir la note maximale) :</p>
+<ul>
+<li>(optionnel - écriture) <em>Modifier</em>, <em>Supprimer</em> et <em>Clore</em> un débat dont on est l'auteur</li>
+<li>(optionnel - écriture) <em>Ajouter</em> et <em>Supprimer</em> une contribution à un débat</li>
+<li>(optionnel - affichage) <em>Rechercher</em> du texte dans l'ensemble des contributions du sujet affiché</li>
+<li>(optionnel - affichage) <em>Afficher</em> et <em>trier</em> la liste des sujets de débat par :
+<ul>
+<li>nombre de contributions</li>
+<li>date de la dernière contribution</li>
+</ul></li>
+<li>(optionnel - amélioration) <em>Rendre l'appli responsive</em> : si le terminal d'affichage est trop petit la liste des sujets devrait être remplacée par un bouton de menu.</li>
+<li>(optionnel - amélioration) <em>Ne pas rafraîchir toute la page</em> à chaque modification</li>
+</ul>
+<!-- Les étudiant-e-s motivé-e-s peuvent proposer des fonctionnalités optionnelles pertinentes à la liste précédente. -->
+<h2 id="conseils-pour-le-développement-du-client">Conseils pour le développement du client</h2>
+<ul>
+<li>Utilisez <em>visual studio code</em>.</li>
+<li>Privilégiez les <a href="https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals">Template literals</a> pour les éléments HTML que vous créerez dynamiquement.</li>
+<li>N'utilisez <strong>pas</strong> JQuery</li>
+<li>Utilisez le champ <code>id</code> des éléments HTML pour y accéder dans vos fonctions de gestion des événements.</li>
+<li>N'utilisez <strong>pas</strong> d'hébergement publique pour vos sources (<em>e.g.</em> GitHub/Bitbucket publiques). Au besoin, vous disposez d'un hébergement à l'université: <a href="https://forge.univ-lyon1.fr/">forge.univ-lyon1.fr</a>.</li>
+</ul>
+<h1 id="étapes-du-projet-évaluation">Étapes du projet, évaluation</h1>
+<p>Trois séances sont fléchées à l'emploi du temps sur ce projet : le 
+08/04, le 29/04 et le 13/05 (jour de la soutenance). La permanence entre
+ les séances est assurée via <a href="https://framateam.org/lifap5-2019p/channels/projet">Le canal <em>projet</em> du framateam</a></p>
+<p>Dans un premier temps vous travaillerez <em>en local en lecture seule</em>. Ensuite, l'hébergement des listes de tâches se fera sur un serveur dédié géré par l'université (voir la section <a href="#serveur">Serveur</a>). Les grandes étapes du projet, appelées <em>jalons</em>, sont les suivantes.</p>
+<h2 id="jalon-1-maquette-de-lapplication">Jalon 1 : maquette de l'application</h2>
+<p><a href="https://perso.liris.cnrs.fr/romuald.thion/files/Enseignement/LIFAP5/Projet-2019P/LIFAP5-2019P-Projet-Frontend.zip">Un projet de départ</a> vous est fourni pour démarrer le projet, il est constitué des fichiers <a href="https://perso.liris.cnrs.fr/romuald.thion/files/Enseignement/LIFAP5/Projet-2019P/frontend/LIFAP5-Projet.js"><code>LIFAP5-Projet.js</code></a> et <a href="https://perso.liris.cnrs.fr/romuald.thion/files/Enseignement/LIFAP5/Projet-2019P/frontend/LIFAP5-Projet.html"><code>LIFAP5-Projet.html</code></a> et des fichiers <code>json</code>. La page HTML est une maquette <em>statique</em> HTML/CSS à l'image de l'esquisse proposée plus haut. <strong>Vous êtes libres de la reprendre</strong>.</p>
+<div class="warning">
+<p><strong>Attention :</strong> créer un projet sur <a href="http://forge.univ-lyon1.fr/">forge.univ-lyon1.fr</a> pour versionner votre code et travailler à plusieurs. C'est une <strong>bonne pratique</strong> à acquérir.</p>
+</div>
+<div class="warning">
+<p><strong>Attention :</strong> vous pouvez tout à fait entrelacer la réalisation des jalons 1 et 2, en ajoutant progressivement des éléments dans l'interface <strong>et</strong> en créant le code <code>js</code> correspondant</p>
+</div>
+<h2 id="jalon-2-génération-dynamique-sans-serveur">Jalon 2 : génération dynamique sans serveur</h2>
+<p>Ensuite, vous devez dynamiser votre maquette : tout le HTML statique sera générée à partir des collections <a href="https://perso.liris.cnrs.fr/romuald.thion/files/Enseignement/LIFAP5/Projet-2019P/frontend/Projet-2019-users.json"><code>Projet-2019-users.json</code></a> <a href="https://perso.liris.cnrs.fr/romuald.thion/files/Enseignement/LIFAP5/Projet-2019P/frontend/Projet-2019-topics.json"><code>Projet-2019-topics.json</code></a> lues en local avec l'API <code>fetch</code> (voir plus loin pour le détail de ces données).</p>
+<p>Il est très important de travailler <strong>dès cette partie en asynchrone</strong>, le passage à un vrai serveur à la place des fichiers locaux sera facilité.</p>
+<ul>
+<li>Séparez les fonctions de <em>rendu</em> qui ont la charge de mettre à jour l'interface web quand la collection est retournée par le serveur des fonctions <em>de gestions des événements</em> (<em>handlers</em>) qui seront associées aux différents éléments de l'interface.</li>
+<li>N'utilisez pas de <em>variables globales</em> dans votre programme : représentez <em>l'intégralité de l'état de votre application</em> (liste des sujets et de leurs contributions, tris choisis, sujet sélectionné, clef d'API de l'utilisateur) dans une structure <code>State</code> (à compléter) qui sera explicitement passée en paramètre <em>de toutes vos fonctions</em> de rendu et de gestion des événements.</li>
+</ul>
+<div class="warning">
+<p><strong>Attention :</strong> le jalon 2 correspond essentiellement à refaire dans le projet ce que vous avez fait <strong><a href="https://perso.liris.cnrs.fr/romuald.thion/files/Enseignement/LIFAP5/TP3/LIFAP5-2019P-TP3.html">dans le TP3/4</a> </strong>.</p>
+</div>
+<div class="warning">
+<p><strong>Attention :</strong> si vous savez ce que vous faites, vous pouvez sauter cette étape et travailler directement sur le serveur.</p>
+</div>
+<h2 id="jalon-3-accès-au-serveur">Jalon 3 : accès au serveur</h2>
+<ul>
+<li>Vous cessez d'accéder au fichiers locaux et accédez à la collection au serveur.</li>
+<li>Vous implantez les fonctionnalités de création, modification et suppression qui nécessitent une <em>écriture sur le serveur</em></li>
+</ul>
+<div class="warning">
+<p><strong>Attention :</strong> alors qu'avec les fichiers locaux vous avez <em>directement accès à l'intégralité de la collection des sujets</em> avec <strong>une seule requête <code>fetch</code></strong>, ce ne sera pas le cas avec le serveur. Pour accéder aux contributions d'un sujet, il faudra <strong>faire 3 requêtes</strong> voir <a href="#API-TOPIC">l'API des <em>topics</em></a> :</p>
+<ol style="list-style-type: decimal">
+<li>obtenir la liste des <em>topics</em> avec <code>GET /topic/</code></li>
+<li>obtenir sa description avec <code>GET /topic/:id</code></li>
+<li>obtenir la liste des <em>posts</em> avec <code>GET /topic/:id/posts/</code></li>
+</ol>
+</div>
+<div class="warning">
+<p>Une <strong>solution intermédiaire</strong> pour passer du jalon 2 au jalon 3 est <em>de faires tous les appels serveurs une bonne fois pour toutes afin de reconstituer l'intégralité du document <code>json</code></em>. Ensuite, vous serez plus malins et ne chargerez que les posts dont vous avez besoin.</p>
+</div>
+<h2 id="modalité-dévaluation">Modalité d'évaluation</h2>
+<div class="warning">
+Le projet est à réaliser en binôme <strong>constitué au sein du même groupe de TD</strong> (ou éventuellement en monôme). Pour les binômes "à cheval", demandez au responsable d'UE de vous changer de groupe de TD.
+</div>
+<h3 id="dépôt-du-code">Dépôt du code</h3>
+<p>Une archive zip est à déposer pour la même date, 8h du matin, sur Tomuss dans la cellule <em>Depot_Projet</em> de <em>UE-INF2026L Programmation Fonctionnelle Pour Le Web</em> Votre fichier zip contiendra tous vos fichiers <code>html</code>, <code>js</code> et les fichiers statiques (e.g., images) éventuellement utilisés <strong>ainsi qu'un fichier <code>README.txt</code></strong> contenant vos noms, prénoms et d'éventuels commentaires.</p>
+<h3 id="soutenance">Soutenance</h3>
+<p>Chaque binôme présentera son projet à son encadrant de TP le lundi 
+13/05 au matin. Un ordre de passage sera fixé sur Tomuss en temps utile.
+ La soutenance durera <strong>10 minutes par projet</strong>, dont environ 5 minutes de présentations et 5 minutes de discussion.</p>
+<ul>
+<li>Vous préparez une courte présentation du projet qui doit montrer l'ensemble des fonctionnalités réalisées, <a href="#FEATURES">voir la liste</a></li>
+<li>Avant votre passer, prévoyez de montrer votre code dans <em>visual studio code</em> pour pouvoir répondre aux questions le concernant.</li>
+</ul>
+<h3 id="critères-dévaluation">Critères d'évaluation</h3>
+<div class="warning">
+<p><strong>Attention :</strong> comme <a href="https://perso.liris.cnrs.fr/romuald.thion/files/Enseignement/LIFAP5/TP3/LIFAP5-2019P-TP3.html">dans le TP3/4</a> il s'agit d'écrire un programme le plus <strong>fonctionnel possible</strong>. <strong>Le manquement à cette consigne sera fortement pénalisé dans le critère de qualité générale du code.</strong></p>
+</div>
+<p>Lors de la soutenance vous serez évalués avec le barème (prévisionnel) suivant :</p>
+<ul>
+<li>/8 Réalisation des fonctionnalités obligatoire :</li>
+<li>-1 point par fonctionnalité manquante (il y a 10 fonctionnalités obligatoires), -0.5 par fonctionnalité boguée.</li>
+<li>/6 Réalisation de 3 fonctionnalités optionnelles 6 points, 1 
+fonctionnalité par catégorie: -2 par fonctionnalité manquante, -1 par 
+fonctionnalité boguée, -1 si seulement 2 catégories couvertes</li>
+<li>/2 Existence de tests unitaires automatisés: 2 points</li>
+<li>/1 Existence de tests fonctionnels manuels (en dresser la liste): 1 point</li>
+<li>/3 Qualité de code (évaluée en interaction avec le chargé de TP en soutenance): 3 points</li>
+<li>Pénalité pour un code qui n'utilise pas le serveur : -4</li>
+</ul>
+<h1 id="description-technique">Description technique</h1>
+<p>Données sur les sujets (<em>topics</em>), les contributions (<em>posts</em>) et les utilisateurs (<em>users</em>) au format <code>json</code>.</p>
+<p><a name="JSON"></a></p>
+<h2 id="schémas-json">Schémas <code>json</code></h2>
+<h3 id="utilisateurs-users">Utilisateurs (<em>users</em>)</h3>
+<p>Chaque utilisateur est représenté en base par un objet JSON composé 
+des champs suivants. Une liste d'utilisateurs est simplement un tableau 
+d'utilisateurs, voir le fichier <a href="https://perso.liris.cnrs.fr/romuald.thion/files/Enseignement/LIFAP5/Projet-2019P/frontend/Projet-2019-users.json"><code>Projet-2019-users.json</code></a>.</p>
+<ul>
+<li><code>_id</code> : l'identifiant de l'utilisateur, unique dans la collection, généré aléatoirement</li>
+<li><code>login</code> : un identifiant unique en chaîne de caractère, celui qui sera utilisé dans les sujets et contributions</li>
+<li><code>avatar</code> : l'URL d'une photo de profil (champs optionnel)</li>
+<li><code>joined_on</code> : la date d'ajout au <a href="https://en.wikipedia.org/wiki/ISO_8601">format ISO</a> de l'utilisateur dans la base</li>
+<li><code>apikey</code> : la clef qui permet à l'utilisateur de s'authentifier. <em>Ce champs est masqué sauf pour l'utilisateur qui connaît la clef d'API</em> voir <a href="#APIKEY">Authentification sur le serveur</a> et la route <a href="#API-USER"><code>/users/whoami</code></a></li>
+</ul>
+<h3 id="sujet-topics-et-contributions-_posts">Sujet (<em>topics</em>) et contributions (_posts)</h3>
+<p>Chaque sujet de débat est représenté par un objet <code>json</code> composé des champs suivants. Une liste de sujets est simplement un tableau de sujets, voir le fichier <a href="https://perso.liris.cnrs.fr/romuald.thion/files/Enseignement/LIFAP5/Projet-2019P/frontend/Projet-2019-topics.json"><code>Projet-2019-topics.json</code></a>.</p>
+<ul>
+<li><code>_id</code> : l'identifiant du sujet, <em>unique dans la collection</em>. Il s'agit en coulisse d'un type <a href="https://docs.mongodb.com/manual/reference/method/ObjectId/"><code>ObjectId</code></a> de mongoDB</li>
+<li><code>date</code> : la date de création du sujet au format ISO, <em>ce champs est automatiquement rempli</em></li>
+<li><code>topic</code> : l'intitulé du sujet de débat</li>
+<li><code>open</code> : l'état du sujet de débat (valeur booléenne)</li>
+<li><code>desc</code> : une description détaillée du sujet de débat</li>
+<li><code>user</code> : l'identifiant de l'utilisateur qui a crée le sujet, <em>ce champs est automatiquement rempli à partir de votre clef d'API</em>, voir <a href="#APIKEY">Authentification sur le serveur</a></li>
+<li><code>posts</code> : un tableau des contributions à ce sujet, chacune étant composée des champs suivants :
+<ul>
+<li><code>user</code> : l'identifiant de l'utilisateur qui a crée cette contribution, <em>ce champs est automatiquement rempli à partir de votre clef d'API</em></li>
+<li><code>content</code> : le texte de la contribution</li>
+<li><code>date</code> : la date de création de la contribution au format ISO, <em>ce champs est automatiquement rempli</em></li>
+<li><code>likers</code> : la liste des utilisateurs qui ont "<em>liké</em>" cette contribution</li>
+<li><code>dislikers</code> : la liste des utilisateurs qui ont "<em>disliké</em>" cette contribution</li>
+</ul></li>
+</ul>
+<p><a name="SERVER"></a></p>
+<h2 id="accès-au-serveur">Accès au serveur</h2>
+<p>Un serveur Web est déployé sur la machine <code>https://lifap5.univ-lyon1.fr</code> avec une API Web pour accéder en lecture et en écriture. Les accès en écriture <em>nécessitent de s'authentifier à chaque requête</em> voir ci-après.</p>
+<p>Chacune des fonctionnalités du serveur est accessible via une <strong><a href="https://restfulapi.net/http-methods/">méthode HTTP</a></strong> et une <strong>route</strong> , c'est-à-dire un chemin relatif sur le serveur, comme par exemple <code>POST /echo</code>.</p>
+<p><a name="APIKEY"></a></p>
+<h3 id="authentification-sur-le-serveur">Authentification sur le serveur</h3>
+<p>Certaines interactions avec le serveur <strong>nécessitent d'être authentifié</strong>
+ auprès de ce dernier, c'est-à-dire qu'une requête ne sera acceptée par 
+le serveur que s'il peut l'associer à un utilisateur et que cet 
+utilisateur a le droit de faire cette requête. Il est par exemple 
+interdit de supprimer une contribution créée par un autre utilisateur.</p>
+<p>Afin de s'authentifier auprès du serveur, chaque utilisateur dispose d'une <strong>clef (d'API)</strong>, composée d'une suite de caractères unique à chaque utilisateur, disponible dans <a href="https://tomuss.univ-lyon1.fr/">tomuss</a> (dans la case <code>apikey</code>).</p>
+<p>Cette clé doit être transmise dans le <em>header</em> HTTP <code>x-api-key</code> qui est configurée avec une valeur par défaut dans les projet de départ. Un exemple d'utilisation de de <code>fetch</code> utilisant cette authentification est fourni avec la fonction <code>whoami()</code> qui utilise la route <code>/whoami</code>.</p>
+<p>Pour tester, exécuter <code>let state = new State; state.x_api_key = "MA_CLEF_TOMUSS"; whoami(state)().then(console.log);</code> doit vous renvoyer un objet <code>json</code> qui vous décrit et qui comporte dont votre numéro d'étudiant (associé à votre clef <code>x-api-key</code>).</p>
+<h3 id="api-rest">API rest</h3>
+<h4 id="api-de-test">API de test</h4>
+<ul>
+<li><code>POST /echo</code> renvoie l'objet <code>json</code> passé dans le corps de la requête HTTP. C'est une fonctionnalité de test similaire à la commande <code>ping</code>. Une fonction <code>echo(state)(data)</code> associée à cette route est fournie dans le projet de départ. Si vous exécutez <code>echo()({msg:42}).then(console.log);</code> vous devriez obtenir en retour le même objet <code>{msg:42}</code>.</li>
+</ul>
+<p><a name="API-USER"></a></p>
+<h4 id="api-user">API user</h4>
+<ul>
+<li><code>GET /users/</code> : renvoie la liste <em>des logins</em> des utilisateurs</li>
+<li><code>GET /user/:login</code>: renvoie les informations concernant l'utilisateur dont le champs <code>login</code> vaut <code>:login</code> est passé dans la route . La structure de retour est similaire à celle que l'on peut trouver dans <a href="https://perso.liris.cnrs.fr/romuald.thion/files/Enseignement/LIFAP5/Projet-2019P/frontend/Projet-2019-users.json"><code>Projet-2019-users.json</code></a> sauf que la champs <code>apikey</code> est caché</li>
+<li><code>GET /user/whoami</code> (<em>authentifié</em>) : renvoie les informations de l'utilisateur qui a fait la requête, authentifié via <strong>sa clef d'API</strong> passée dans le <em>header</em> de la requête. Cette route vous permet de tester l'authentification. Une fonction <code>whoami()</code> associée à cette route est fournie dans le projet de départ.</li>
+</ul>
+<p><a name="API-TOPIC"></a></p>
+<h4 id="api-topic">API topic</h4>
+<ul>
+<li><code>GET /topics/</code> : renvoie la liste des identifiants des sujets</li>
+<li><code>GET /topic/:id</code> : renvoie les informations concernant le sujet <code>:id</code>. La structure de retour est similaire à celle que l'on peut trouver dans <a href="https://perso.liris.cnrs.fr/romuald.thion/files/Enseignement/LIFAP5/Projet-2019P/frontend/Projet-2019-topics.json"><code>Projet-2019-topics.json</code></a> sauf le champ <em>posts</em> qui est caché</li>
+<li><code>POST /topic/create</code> (<em>authentifié</em>) : crée un nouveau <em>topic</em> à partir de l'objet <code>json</code> au format <a href="#JSON">indiqué ci-dessus</a> placé dans le <code>body</code> de la requête. Les champs <code>_id</code>, <code>date</code> et <code>user</code> seront remplis par le serveur. Le champ <code>posts</code> n'est pas pris en compte. Le serveur renvoie l'objet <code>json</code> crée.</li>
+<li><code>PUT /topic/:id</code> (<em>authentifié</em>) : modifie un <em>topic</em> dont on est le créateur à partir de l'objet <code>json</code> au format <a href="#JSON">indiqué ci-dessus</a> placé dans le <code>body</code> de la requête. Les champs <code>_id</code>, <code>date</code>, <code>user</code> et <code>posts</code> ne sont pas pris en compte, la date est mise à jour. Le serveur renvoie l'objet <code>json</code> après modification.</li>
+<li><code>PUT /topic/:id/clopen</code> (<em>authentifié</em>) : change l'état ouvert/fermé d'un <em>topic</em> dont on est le créateur. Le serveur renvoie un objet <code>json</code> contenant l'état ouvert/fermé après modification et l'<code>_id</code> de l'objet modifié.</li>
+<li><code>DELETE /topic/:id/</code> (<em>authentifié</em>) : supprime un <em>topic</em> dont on est le créateur. Le serveur renvoie un objet <code>json</code> expliquant si la requête de suppression a été effectuée.</li>
+<li><code>DELETE /topic/delete-all</code> (<em>authentifié</em>) : supprime <strong>tous les <em>topics</em></strong> dont on est le créateur. Le serveur renvoie un objet <code>json</code> expliquant si la requête de suppression a été effectuée. Utile pour le développement.</li>
+</ul>
+<p><a name="API-POSTS"></a></p>
+<h4 id="api-posts">API posts</h4>
+<ul>
+<li><code>GET /topic/:id/posts</code> : renvoie le tableau des <em>posts</em> concernant le <em>topic</em> <code>:id</code>. La structure de retour est similaire au champ <em>posts</em> que l'on peut trouver dans <a href="https://perso.liris.cnrs.fr/romuald.thion/files/Enseignement/LIFAP5/Projet-2019P/frontend/Projet-2019-topics.json"><code>Projet-2019-topics.json</code></a></li>
+<li><code>POST /topic/:id/post/create</code> (<em>authentifié</em>) : crée un nouveau <em>post</em> concernant le <em>topic</em> <code>:id</code> à partir de l'objet <code>json</code> au format <a href="#JSON">indiqué ci-dessus</a> placé dans le <code>body</code> de la requête. Les champs <code>_id</code>, <code>date</code> et <code>user</code> seront remplis par le serveur. Les champs <code>likers</code> et <code>dislikers</code> ne sont pas pris en compte. Le serveur renvoie l'objet <code>post</code> crée.</li>
+<li><code>PUT /topic/:id/post/:post/like</code> (<em>authentifié</em>) : modifie un <em>post</em> d'un <em>topic</em> en ajoutant (resp. supprimant) l'utilisateur authentifié à la liste des <code>likers</code> si celui si n'y était pas (resp. si celui-ci y était déjà). Le serveur renvoie l'objet <code>post</code> après modification.</li>
+<li><code>PUT /topic/:id/post/:post/dislike</code> (<em>authentifié</em>) : similaire au précédent</li>
+<li><code>DELETE /topic/:id/post/:post</code> (<em>authentifié</em>) : supprime un <em>post</em> (d'un <em>topic</em>) dont on est le créateur. Le serveur renvoie un objet <code>json</code> expliquant si la requête de suppression a été effectuée.</li>
+</ul>
+<h3 id="code-derreurs">Code d'erreurs</h3>
+<p>En cas d'erreurs de traitement, les codes de retour http sont utilisés <a href="https://en.wikipedia.org/wiki/List_of_HTTP_status_codes">voir</a> et le corps de la réponse contient (en général) des objets json de la forme <code>{name : "ErrorLabel", message : "Explicit message about error"}</code>, avec les codes suivants :</p>
+<ul>
+<li><code>NoSuchUser</code> (code 404)</li>
+<li><code>NoX-Api-KeyProvided</code> (code 401)<br>
+</li>
+<li><code>NoSuchX-Api-Key</code> (code 403)</li>
+<li><code>NoSuchTopic</code> (code 404)</li>
+<li><code>NoSuchPost</code> (code 404)</li>
+<li><code>CastError</code> (code 400)</li>
+<li><code>ValidationError</code> (code 400)</li>
+<li><code>NoOwnership</code> (code 403)</li>
+<li><code>ClosedTopic</code> (code 403)</li>
+</ul>
+<h2 id="accès-au-serveur-depuis-lextérieur-du-campus">Accès au serveur depuis l'extérieur du campus</h2>
+<div class="warning">
+<p><strong>Attention:</strong> le serveur est accessible depuis internet. <strong>Vous n'avez rien à faire de particulier</strong></p>
+</div>
+
+
+</body></html>

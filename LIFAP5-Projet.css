@@ -1,0 +1,30 @@
+.brand {
+    height: 25px;
+}
+
+
+/* By https://auralinna.blog/post/2017/how-to-make-a-css-speech-bubble-with-borders-and-drop-shadow */
+.speech-bubble {
+    background: #efefef;
+    line-height: 1.2;
+    margin: 0 auto 40px;
+    max-width: 90%;
+    padding: 10px;
+    position: relative;
+}
+
+.speech-bubble p {
+    margin: 0 0 10px;
+}
+.speech-bubble p:last-of-type {
+    margin-bottom: 0;
+}
+
+.speech-bubble::after {
+    border-left: 20px solid transparent;
+    border-top: 20px solid #efefef;
+    bottom: -20px;
+    content: "";
+    position: absolute;
+    right: 20px;
+}

@@ -1,0 +1,26 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Tests pour le projet</title>
+  <link href="https://cdn.rawgit.com/mochajs/mocha/2.2.5/mocha.css" rel="stylesheet" />
+</head>
+<body>
+  <h1 style="padding : 1ex;" id="title-test-projet">Tests pour le Projet</h1>
+  <div id="mocha"></div>
+
+  <script src="https://cdn.rawgit.com/jquery/jquery/2.1.4/dist/jquery.min.js"></script>
+  <script src="http://chaijs.com/chai.js"></script>
+  <script src="https://cdn.rawgit.com/mochajs/mocha/2.2.5/mocha.js"></script>
+
+  <script>mocha.setup('tdd');</script>
+  <script src="LIFAP5-Projet.js"></script>
+  <script src="tests.js"></script>
+  <script>
+   document.addEventListener('DOMContentLoaded', function(){
+       mocha.checkLeaks();
+       mocha.globals(['jQuery']);
+       mocha.run();
+   }, false);
+  </script>
+</body>
+</html>
